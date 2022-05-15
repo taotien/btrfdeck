@@ -7,6 +7,14 @@
 set -e
 
 cd /home/deck/btrfdeck || echo "Could not find btrfdeck repo!"
+echo "Checking for Valve changes..."
+if [[ $(diff -q /usr/lib/hwsupport/sdcard-mount.sh ./unmodified/sdcard-mount.sh) == 1 ]]
+then
+	echo "Valve has updated the script, potentially incompatible. Please manually check the files using diff and submit a Github issue."
+	exit
+else
+	echo "No breaking changes!"
+fi
 echo "Backing up current files..."
 cp /usr/lib/hwsupport/sdcard-mount.sh ./backup/sdcard-mount.sh
 #cp /usr/lib/hwsupport/format-sdcard.sh ./backup/format-sdcard.sh
@@ -23,5 +31,5 @@ sudo chmod 755 /usr/lib/hwsupport/sdcard-mount.sh /usr/lib/hwsupport/format-sdca
 echo "Re-enabling readonly filesystem..."
 sudo steamos-readonly enable
 echo "Done!"
-read -n1 -sr -p "Press any key to exit..."
+read -n1 -sr -p "You can now close this window."
 exit
